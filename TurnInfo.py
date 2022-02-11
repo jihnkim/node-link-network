@@ -15,6 +15,7 @@ print(turn_df.head())
 len_turndf = len(turn_df['NODE_ID'])
 len_linkdf = len(link_df['LINK_ID'])
 
+# 복잡도 개선을 하자
 for i in tqdm(range(len_turndf)):
     ST_LINK = turn_df['ST_LINK'][i]
     ED_LINK = turn_df['ED_LINK'][i]
