@@ -3,7 +3,7 @@ import pandas as pd
 from tqdm import tqdm
 
 # load data
-df = pd.read_csv('C:/Users/jih11/Desktop/myprojects/ybs/data/양산시_LINK.csv', encoding='cp949')
+df = pd.read_csv('C:/Users/jih11/Desktop/myprojects/ybs/test/LinkSplit_1.csv', encoding='cp949')
 print(df.head())
 
 # preprocessing
@@ -11,17 +11,23 @@ print(df.head())
 df = df.iloc[0:]
 print(df)
 
+# 빈 컬럼 세팅
+for n in range(1, 7):
+    df[f'L{n}'] = 0
+df['CHK'] = 0
+print(df.head())
+
 # 사용할 열 선택
 df = df.loc[:, ['LINK_ID', 'F_NODE', 'T_NODE', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'CHK']]
 print(df.head())
 
 # 다음 경로 열 공백 처리 (필요시 진행)
-df.loc[:, ['L1', 'L2', 'L3', 'L4', 'L5', 'L6']] = ' '
-print(df.head())
+# df.loc[:, ['L1', 'L2', 'L3', 'L4', 'L5', 'L6']] = ' '
+# print(df.head())
 
 # main logic
 for idx in tqdm(range(len(df['LINK_ID']))):
-    print('==', 'LINK ID : ', df['LINK_ID'][idx], '==')
+    # print('==', 'LINK ID : ', df['LINK_ID'][idx], '==')
     F_NODE = df['F_NODE'][idx]
     T_NODE = df['T_NODE'][idx]
     CHK = 2
@@ -50,20 +56,18 @@ for idx in tqdm(range(len(df['LINK_ID']))):
 
             CHK = 1
 
-    # 램프형 / 마름모형 예외 처리 -> (fnode - tnode) 와 (tnode - fnode) 가 같은 링크가 존재하지 않음(고유값을 가짐)
+    # 램프형 / 마름모형 예외 처리 -> (fnode - tnode) 와 (tnode - fnode) 같은 링크가 존재하지 않는 특징 이용(고유값을 가짐)
     for i in range(len(lst)):
         tmp = df[df['T_NODE'].isin([fnode_lst[i]]) & df['F_NODE'].isin([tnode_lst[i]])]
         if len(tmp) > 1:
             CHK = 3
             break
 
-
     # 이도저도 아닌 특수링크 표시
     if (CHK != 3) and (len(lst) == 0) and (len(u) == 0):
         CHK = 4
 
     # 최종 리스트 요소를 L1, L2, L3 .. 에 추가 하는 로직, 최종 df 반환 (list -> dataFrame)
-    # fstring 활용
     if CHK == 1:
         cnt = 1
         for link in lst:
@@ -75,7 +79,7 @@ for idx in tqdm(range(len(df['LINK_ID']))):
 
     df['CHK'][idx] = CHK
 
-df.to_csv('/data/example.csv', index=False)
+df.to_csv('test_output/Link_example_1.csv', index=False)
 
 # l = df['LINK_ID'][0]
 # print(l)
