@@ -3,7 +3,7 @@ import pandas as pd
 from tqdm import tqdm
 
 # load data
-df = pd.read_csv('C:/Users/jih11/Desktop/myprojects/ybs/양산시_LINK.csv', encoding='cp949')
+df = pd.read_csv('C:/Users/jih11/Desktop/myprojects/ybs/data/양산시_LINK.csv', encoding='cp949')
 print(df.head())
 
 # preprocessing
@@ -75,7 +75,7 @@ for idx in tqdm(range(len(df['LINK_ID']))):
 
     df['CHK'][idx] = CHK
 
-df.to_csv('example.csv', index=False)
+df.to_csv('/data/example.csv', index=False)
 
 # l = df['LINK_ID'][0]
 # print(l)
