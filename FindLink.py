@@ -12,13 +12,13 @@ df = df.iloc[0:]
 print(df)
 
 # 빈 컬럼 세팅
-for n in range(1, 7):
+for n in range(1, 9):
     df[f'L{n}'] = 0
 df['CHK'] = 0
 print(df.head())
 
 # 사용할 열 선택
-df = df.loc[:, ['LINK_ID', 'F_NODE', 'T_NODE', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'CHK']]
+df = df.loc[:, ['LINK_ID', 'F_NODE', 'T_NODE', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'CHK']]
 print(df.head())
 
 # 다음 경로 열 공백 처리 (필요시 진행)
@@ -50,7 +50,7 @@ for idx in tqdm(range(len(df['LINK_ID']))):
                 continue
             
             # 유턴이 아닌 링크가 있을 경우 리스트에 저장
-            lst.append(df['LINK_ID'][j])
+            lst.append(df['LINK_ID'][j]) 
             fnode_lst.append(df['F_NODE'][j])
             tnode_lst.append(df['T_NODE'][j])
 
