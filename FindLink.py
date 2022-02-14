@@ -1,10 +1,14 @@
 # import packages
 import pandas as pd
 from tqdm import tqdm
+from CheckSum import checkSum
 
 # load data
-df = pd.read_csv('C:/Users/jih11/Desktop/myprojects/ybs/test/LinkSplit_1.csv', encoding='cp949')
+df = pd.read_csv('C:/Users/jih11/Desktop/myprojects/ybs/test/link_링크별구역_7_2구역.csv', encoding='cp949')
+lamp_df = pd.read_csv('C:/Users/jih11/Desktop/myprojects/ybs/test/lamp_links.csv', encoding='cp949')
+lamp_df = lamp_df[lamp_df['T'].isin(['램프구간'])]
 print(df.head())
+print(lamp_df.head())
 
 # preprocessing
 # 확인용 데이터 세팅 (필요시 진행)
@@ -57,14 +61,14 @@ for idx in tqdm(range(len(df['LINK_ID']))):
             CHK = 1
 
     # 램프형 / 마름모형 예외 처리 -> (fnode - tnode) 와 (tnode - fnode) 같은 링크가 존재하지 않는 특징 이용(고유값을 가짐)
-    for i in range(len(lst)):
-        tmp = df[df['T_NODE'].isin([fnode_lst[i]]) & df['F_NODE'].isin([tnode_lst[i]])]
-        if len(tmp) > 1:
-            CHK = 3
-            break
+    # for i in range(len(lst)):
+    #     tmp = df[df['T_NODE'].isin([fnode_lst[i]]) & df['F_NODE'].isin([tnode_lst[i]])]
+    #     if len(tmp) > 1:
+    #         CHK = 3
+    #         break
 
     # 이도저도 아닌 특수링크 표시
-    if (CHK != 3) and (len(lst) == 0) and (len(u) == 0):
+    if (len(lst) == 0) and (len(u) == 0):
         CHK = 4
 
     # 최종 리스트 요소를 L1, L2, L3 .. 에 추가 하는 로직, 최종 df 반환 (list -> dataFrame)
@@ -79,11 +83,18 @@ for idx in tqdm(range(len(df['LINK_ID']))):
 
     df['CHK'][idx] = CHK
 
-df.to_csv('test_output/Link_example_1.csv', index=False)
+CNT = checkSum(df, 'CHK', [1, 2])
+print("CHECK LAMP SECTOR ... ")
+print(f"BEFORE REMOVE : {CNT}")
 
-# l = df['LINK_ID'][0]
-# print(l)
-# print(len(df['LINK_ID']))
-# F_NODE = df['F_NODE'][0]
-# print(F_NODE)
-# print(df.iloc[])
+# 완성된 테이블에서 램프구간 제거
+for idx, l in tqdm(enumerate(list(df['LINK_ID']))):
+    if l in list(lamp_df['LINK_ID']):
+        df['CHK'][idx] = 3
+
+CNT = checkSum(df, 'CHK', [1, 2])
+print("REMOVE FINISHED ... ")
+print(f"AFTER REMOVE : {CNT}")
+
+df.to_csv('test_output/Link_7_2.csv', index=False)
+print(" == CSV SAVED == ")
