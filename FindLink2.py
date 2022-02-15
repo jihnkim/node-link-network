@@ -3,9 +3,9 @@ import pandas as pd
 from tqdm import tqdm
 from CheckSum import checkSum
 
-for filenum in range(2, 9):
+for filenum in range(2, 10):
     # load data
-    df = pd.read_csv(f'C:/Users/jih11/Desktop/myprojects/ybs/test/link_링크별구역_7_{filenum}구역.csv', encoding='cp949')
+    df = pd.read_csv(f'C:/Users/jih11/Desktop/myprojects/ybs/test/5/link_링크별구역_5_{filenum}구역.csv', encoding='cp949')
     lamp_df = pd.read_csv('C:/Users/jih11/Desktop/myprojects/ybs/test/lamp_links.csv', encoding='cp949')
     lamp_df = lamp_df[lamp_df['T'].isin(['램프구간'])]
     # print(df.head())
@@ -60,14 +60,7 @@ for filenum in range(2, 9):
 
                 CHK = 1
 
-        # 램프형 / 마름모형 예외 처리 -> (fnode - tnode) 와 (tnode - fnode) 같은 링크가 존재하지 않는 특징 이용(고유값을 가짐)
-        # for i in range(len(lst)):
-        #     tmp = df[df['T_NODE'].isin([fnode_lst[i]]) & df['F_NODE'].isin([tnode_lst[i]])]
-        #     if len(tmp) > 1:
-        #         CHK = 3
-        #         break
-
-        # 이도저도 아닌 특수링크 표시
+        # 특수링크
         if (len(lst) == 0) and (len(u) == 0):
             CHK = 4
 
@@ -97,5 +90,5 @@ for filenum in range(2, 9):
     CNT = checkSum(df, 'CHK', [1, 2])
     print(f"AFTER REMOVE : {CNT}", f'/ {len(df)}')
 
-    df.to_csv(f'test_output/Link_7_{filenum}.csv', index=False)
+    df.to_csv(f'test_output/5/Link_5_{filenum}.csv', index=False)
     print(" == CSV SAVED == ")
