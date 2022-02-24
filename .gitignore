@@ -196,3 +196,4 @@ tags
 /output
 /test
 /test_output
+*.csv
