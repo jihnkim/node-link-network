@@ -1,3 +1,10 @@
+#-*- coding: utf-8 -*-
+'''
+    @ Author : jihnkim
+    @ method : lamplink labeling
+'''
+
+# import packages
 import pandas as pd
 from tqdm import tqdm
 from CheckSum import checkSum

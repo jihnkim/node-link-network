@@ -1,6 +1,8 @@
-# consider
-# 회전타입 지울 때 컬럼 밸류가 003, 101, 102, 103 인것만 지워야함
-# 처음 테이블 잡을 때  행 날리자
+#-*- coding: utf-8 -*-
+'''
+    @ Author : jihnkim
+    @ method : remove link in turninfo table
+'''
 
 # import packages
 from numpy import int64
@@ -8,6 +10,9 @@ import pandas as pd
 from tqdm import tqdm
 
 # load data
+INPUT_DIR = ''
+OUPUT_DIR = ''
+
 link_df = pd.read_csv('C:/Users/jih11/Desktop/myprojects/ybs/data/LINK_3.csv', encoding='cp949')
 link_df = link_df.loc[:, ['LINK_ID', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7']]
 link_df = link_df.fillna(0)
@@ -28,6 +33,8 @@ print('BEFORE DATAFRAME LENGTH : ', len(turn_df))
 
 CHK_LST = ['003', '101', '102', '103']
 CHK_LST2 = [3, 101, 102, 103]
+
+# .isin() method return TRUE, FALSE table
 turn_df = turn_df[turn_df['TURN_TYPE'].isin(CHK_LST2)]
 
 print('REMOVED DATAFRAME LENGTH : ', len(turn_df))
@@ -42,25 +49,27 @@ turn_df = turn_df.reset_index(drop=True)
 
 print(link_df.head())
 print(turn_df.head())
-print('FINISH')
 
 # main Logic
-# turn_df 에서 ST_LINK 하나씩 뽑자
+# df length
 len_turndf = len(turn_df['NODE_ID'])
 len_linkdf = len(link_df['LINK_ID'])
 
+# index mark
 link_idx = 0
 for i in tqdm(range(len_turndf)):
     ST_LINK = turn_df['ST_LINK'][i]
     ED_LINK = turn_df['ED_LINK'][i]
-    # link df 에서 L1, L2, L3 .. 값들 중 ED_LINK와 같은 값이 있는 지 체크 있다면 제거
+    # if st_link == link_id >> remove L1, L2, ... which include ed_link
     for j in range(link_idx, len_linkdf):
         if ST_LINK == link_df['LINK_ID'][j]:
+            # index reallocation(cause.. sorted table >> about before-idx, no need to consider)
             link_idx = j
             for cnt in range(1, 8):
                 if ED_LINK == link_df[f'L{cnt}'][j]:
                     link_df[f'L{cnt}'][j] = 0
                     break
+            # why use break command? >> LINK_ID is UNIQUE VALUE
             break
 
 print(link_df.dtypes)
