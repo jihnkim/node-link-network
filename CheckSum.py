@@ -1,3 +1,9 @@
+#-*- coding: utf-8 -*-
+'''
+    @ Author : jihnkim
+    @ method : col value summation
+'''
+
 # import packages
 import pandas as pd
 from tqdm import tqdm
